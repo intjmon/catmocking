@@ -1,31 +1,60 @@
 import * as express from 'express';
 import catsRouter from './cats/cats.routes';
-
-const app: express.Express = express();
 const port: number = 3000;
 
-//* logging middleware
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log(req.rawHeaders[1]);
-    console.log('this this longging middleware');
-    next();
+class Server {
+  public app: express.Application;
+
+  constructor() {
+    console.log('constructor');
+    const app: express.Application = express();
+    this.app = app;
   }
-);
 
-// json을 읽을 수 있도록 미들웨어 추가
-app.use(express.json());
-
-app.use(catsRouter);
-
-//* 404 middleware
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log('this is 404');
-    res.status(404).send('404 not found');
+  private setRoutes() {
+    console.log('setRoutes');
+    this.app.use(catsRouter);
   }
-);
 
-app.listen(port, () => {
-  console.log(`http://localhost:${port}`);
-});
+  private setMiddleware() {
+    //* logging middleware
+    this.app.use((req, res, next) => {
+      console.log(req.rawHeaders[1]);
+      console.log('this this longging middleware');
+      next();
+    });
+
+    // json을 읽을 수 있도록 미들웨어 추가
+    this.app.use(express.json());
+
+    this.setRoutes();
+
+    //* 404 middleware
+    this.app.use((req, res, next) => {
+      console.log('this is 404');
+      res.status(404).send('404 not found');
+    });
+  }
+
+  public listen() {
+    console.log('listen');
+    this.setMiddleware();
+    this.app.listen(port, () => {
+      console.log(`http://localhost:${port}`);
+    });
+  }
+}
+
+//const app: express.Express = express();
+/*
+const init = () => {
+  const server = new Server();
+  server.listen();
+};
+*/
+function init() {
+  const server = new Server();
+  server.listen();
+}
+
+init();
