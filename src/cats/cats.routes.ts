@@ -61,4 +61,83 @@ router.post('/cats', (req, res) => {
   }
 });
 
+//* PUT 특정 id의 내용 전체 업데이트
+router.put('/cats/:id', (req, res) => {
+  try {
+    const parmas = req.params;
+    const body = req.body;
+    let result;
+    console.log('body:', body);
+
+    Cat.forEach((cat) => {
+      if (cat.id === parmas.id) {
+        cat = body;
+        result = cat;
+      }
+    });
+    res.status(200).send({
+      success: true,
+      data: {
+        cat: result,
+      },
+    });
+  } catch (e: any) {
+    res.status(400).send({
+      success: false,
+      error: e.message,
+    });
+  }
+});
+
+//* PATCH 부분 입데이트
+router.patch('/cats/:id', (req, res) => {
+  try {
+    const parmas = req.params;
+    const body = req.body;
+    let result;
+    console.log('body:', body);
+
+    Cat.forEach((cat) => {
+      if (cat.id === parmas.id) {
+        cat = { ...cat, ...body };
+        result = cat;
+      }
+    });
+    res.status(200).send({
+      success: true,
+      data: {
+        cat: result,
+      },
+    });
+  } catch (e: any) {
+    res.status(400).send({
+      success: false,
+      error: e.message,
+    });
+  }
+});
+
+//* DELETE 삭제
+router.delete('/cats/:id', (req, res) => {
+  try {
+    const parmas = req.params;
+    const body = req.body;
+    let result;
+    console.log('body:', body);
+
+    const newCat = Cat.filter((cat) => cat.id !== parmas.id);
+
+    res.status(200).send({
+      success: true,
+      data: {
+        cat: newCat,
+      },
+    });
+  } catch (e: any) {
+    res.status(400).send({
+      success: false,
+      error: e.message,
+    });
+  }
+});
 export default router;
