@@ -27,6 +27,11 @@ app.get('/cats/som', (req: express.Request, res: express.Response) => {
   res.send({ som: Cat[1] });
 });
 
+app.use((req, res, next) => {
+  console.log('this is 404');
+  res.status(404).send('404 not found');
+});
+
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
 });
