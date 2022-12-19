@@ -13,6 +13,9 @@ app.use(
   }
 );
 
+// json을 읽을 수 있도록 미들웨어 추가
+app.use(express.json());
+
 //* READ 모든 데이터
 app.get('/cats', (req, res) => {
   try {
@@ -43,6 +46,25 @@ app.get('/cats/:id', (req, res) => {
       data: {
         cats,
       },
+    });
+  } catch (e: any) {
+    res.status(400).send({
+      success: false,
+      error: e.message,
+    });
+  }
+});
+
+//* CREATE new cat
+app.post('/cats', (req, res) => {
+  try {
+    const data = req.body;
+    console.log('data:', data);
+    Cat.push(data);
+    console.log('Cat:', Cat);
+    res.status(200).send({
+      success: true,
+      data: {},
     });
   } catch (e: any) {
     res.status(400).send({
